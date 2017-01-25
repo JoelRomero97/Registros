@@ -1,0 +1,75 @@
+/**************************PROPIEDADES ESTÁTICAS**************************/
+
+*
+{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+}
+
+body
+{
+	background-image: url(../imagenes/fondo.jpg);
+}
+
+/**************************HEADER**************************/
+
+header 
+{
+	margin-top: 40px;
+	font-size: 40px;
+	color: rgba(255,255,255,0.8);
+	font-family: Arial;
+}
+
+/**************************FORMULARIO**************************/
+.campos
+{
+	margin: 100px 80px;
+	font-family: Arial;
+	color: #FFFFFF;
+	font-size: 20px;
+}
+
+.entrada
+{
+	font-size: 20px;
+	width: 30%;
+	color: #000000;
+	margin-left: 25px;
+}
+
+.entrada:focus
+{
+	background-color: #F07079;
+	color: #000000;
+	font-size: 20px;
+}
+
+.enviar
+{	
+	height: 40px;
+	margin-top: 40px;
+	margin-left: 150px;
+	width: 200px;
+	font-size: 20px;
+}
+
+a
+{
+    margin-top: 20px;
+    margin-left: 155px;
+    font-size: 30px;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    background-color: #2E2E2E;
+}
+
+a:hover
+{
+    background-color: #F07079;
+}

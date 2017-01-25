@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/Diseno.css">
+	<title>Registro de Nuevo Usuario</title>
+    </head>
+    <body>
+	<header>	
+            <center>
+		<h1>Registrarse</h1>
+            </center>
+	</header>
+	<div class="campos">
+            <form method="POST" action="Servlet2" id="registro">
+		Nombre
+		<input type="text" name="nombre" class="entrada" autocomplete="off">
+		<br>
+		<br>
+		E-mail
+		<input type="text" name="correo" class="entrada" id="email" autocomplete="off">
+		<br>
+		<br>  
+		Contraseña
+		<input type="password" name="contrasena" class="entrada">
+		<br>
+		<br>
+		Repetir contraseña
+		<input type="password" name="contrasena1" class="entrada">
+		<br>
+		<br>
+		<input type="submit" name="registrarse" value="Registrarse" class="enviar">
+            </form>
+            <a href="login.html">Iniciar Sesión</a>
+	</div>
+    </body>
+</html>

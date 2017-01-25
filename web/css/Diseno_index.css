@@ -1,0 +1,500 @@
+*
+{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+}
+
+div .contenedor
+{
+	width: 100%;
+	max-width: 1200px;
+	margin: auto;
+
+	/*FLEX*/
+	display: flex;
+	flex-flow: row wrap;
+}
+
+body
+{
+	background-color: #FF0000;  /*ROJO*/
+}
+
+header
+{
+	width: 100%; 
+}
+ 
+header nav 
+{
+	background:#023859;
+	z-index:1000;
+	width:100%;
+}
+ 
+header nav ul 
+{
+	list-style:none;
+}
+ 
+header nav ul li 
+{
+	display:inline-block;
+	position: relative;
+	font-size: 18px;
+}
+ 
+header nav ul li:hover 
+{
+	background:#E6344A;
+}
+ 
+header nav ul li a 
+{
+	color:#FFFFFF;
+	display:block;
+	text-decoration:none;
+	padding: 10px;
+}
+ 
+header nav ul li a span 
+{
+	margin-right:10px;
+}
+
+.menu_bar
+{
+	display: none;
+}
+
+header div span.icon-menu
+{
+	font-size: 33px;
+	font-weight: 100px;
+}
+
+.menu-fijo   /*CLASE QUE SE AGREGA CUANDO SE DA SCROLL*/
+{
+	position: fixed;
+	z-index: 1000;
+	top: 0;
+}
+
+.icon-menu, .icon-home, .icon-filter_1, .icon-filter_2, .icon-filter_3
+{
+	cursor: pointer;
+	font-size: 20px;
+}
+
+header a:hover
+{
+	background-color: #E6344A;
+}
+
+.icon-menu
+{
+	font-size: 33px;
+	font-weight: 100px;
+}
+
+.ir_arriba
+{
+	display: none;
+	padding: 10px;
+	font-size: 33px;
+	color: #FFFFFF;
+	font-weight: bolder;
+	cursor: pointer;
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
+}
+
+.ir_arriba:hover
+{
+	font-size: 220%; 
+}
+/**************************CARRUSEL DE IMAGENES**************************/
+div .carrusel 
+{
+	width: 100%;
+	margin:0px auto;
+	max-width: 1200px;
+}
+
+div .slides 
+{
+	width: 100%;
+}
+
+div .slidesjs-pagination
+{
+	background-color: #424242;
+	list-style: none;
+	overflow: hidden;
+
+	/*FLEX*/
+	display: flex;
+	flex-flow: row wrap;	
+	flex-grow: 1;
+}
+
+div .slidesjs-pagination li
+{
+	float: left;
+}
+
+div .slidesjs-pagination li a
+{
+	display: block;
+	padding: 10px 20px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+div .slides .active
+{
+	background-color: #000000;
+}
+
+div .slidesjs-pagination li a:hover
+{
+	background-color: #848484;
+}
+
+div .slidesjs-navigation
+{
+	background-color: #000000;
+	color: #FFFFFF;
+	padding: 10px 20px;
+	display: inline-block;
+	text-decoration: none;
+	float: right;
+}
+/**************************BIOGRAFIA**************************/
+.biografia
+{
+	font-family: Courier;
+	/*FLEX*/
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+}
+
+section .descripcion
+{
+	background-color: #A9BCF5;
+	padding: 10px; 
+
+	/*FLEX*/
+	flex: 1 1 70%;
+}
+
+section .descripcion article 
+{
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #000000;
+}
+
+section .descripcion article:nth-last-child(1)
+{
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: none;
+}
+
+aside
+{
+	background-color: #A4A4A4;
+
+	/*FLEX*/
+	display: flex;
+	flex-flow: column wrap;
+	justify-content: flex-start;
+	flex: 1 1 30%;
+}
+
+ aside .widget
+{
+	margin: 10px;
+	width: 94%;
+}
+/**************************TRES IMAGENES CON PIE DE FOTO**************************/
+.imagenes
+{
+	margin: 0px;
+	font-family: Courier;
+	font-size: 13px;
+	font-weight: bold;
+
+	/*FLEX*/
+	display: flex;
+	justify-content: center;
+	flex-flow: row wrap;
+}
+
+section.imagenes img
+{
+	padding: 0px;
+	width: 220px;
+	display: inline-block;
+	
+	/*FLEX*/
+	flex-grow: 1;
+}
+/**************************UBICACIÓN**************************/
+.ubicacion
+{
+	font-family: Courier;
+	font-size: 35px;
+	margin: 5px 15px;
+
+	/*FLEX*/
+	display: flex;
+	justify-content: space-around;
+
+}
+
+.ubicacion iframe
+{
+	margin-top:80px;
+}
+/**************************FOOTER**************************/
+footer
+{
+	width: 100%;
+	padding: 20px;
+	font-size: 20px;
+
+	/*FLEX*/
+	display: flex;
+	justify-content: center;
+	flex-flow: row wrap;
+}
+
+footer nav
+{
+	width: 35%;
+	background-color: #023859;
+	
+	/*FLEX*/
+	display: flex;
+	flex-wrap: wrap;
+}
+
+footer nav a
+{
+	color: #FFFFFF;
+	text-decoration: none;
+	text-align: center;
+	padding: 10px;
+
+	/*FLEX*/
+	flex-grow: 1;
+}
+
+footer nav a:hover
+{
+	background-color: #3B9CC2;
+}
+
+footer nav a span
+{
+	margin-right: 5px;
+	color: #FFFFFF;
+}
+/**************************RESPONSIVE DESIGN**************************/
+@media screen and (min-width: 480px) 
+{									
+	body
+	{
+		background: #DF3A01;
+	}
+
+	.menu_bar
+	{
+		display: block;
+		width:100%;
+		position: relative;
+		top:0;
+		background:#E6344A;
+		z-index: 1000;
+	}
+
+	.menu_bar .menu
+	{
+		display: block;
+		padding: 5px;
+		color: #FFFFFF;
+		overflow: hidden;
+		font-size: 25px;
+		font-weight: bold;
+		text-decoration: none;
+	}
+
+	.menu_bar span 
+	{
+		float: right;
+		font-size: 40px;
+	}
+
+	header nav 
+	{
+		width: 80%;
+		position: fixed;
+		right:100%;
+		margin: 0;
+		overflow: scroll;
+	}
+ 
+	header nav ul li 
+	{
+		display: block;
+		border-bottom:1px solid rgba(255,255,255,.5);
+	}
+ 
+	header nav ul li a 
+	{
+		display: block;
+	}
+
+	.biografia
+	{
+		flex-direction: column;
+	}
+	
+	aside
+	{
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	aside .widget
+	{
+	margin: 10px;
+	width: 54%;
+	}
+
+	.ubicacion
+	{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	}
+
+	footer nav
+	{
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 767px)
+{
+	div .contenedor
+	{
+		flex-direction: column;
+	}
+										
+	body
+	{
+		background-color: #DF3A01;
+	}
+
+	header a.menu
+	{
+		display: block;
+	}
+
+	.biografia
+	{
+		flex-direction: column;
+	}
+
+	aside .widget
+	{
+	margin: 10px;
+	width: 44%;
+	}
+
+	.ubicacion
+	{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	}
+
+	footer nav
+	{
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 950px)
+{									
+	body
+	{
+		background-color: #DF3A01; 
+	}
+
+	header .menu_bar
+	{
+	display: none;
+	}
+
+	header nav
+	{
+		display: inline-block;
+		right: 0%;
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+	}
+
+	header nav ul li 
+	{
+		display: inline-block;
+		border-bottom: none;
+	}
+ 
+	header nav ul li a 
+	{
+		display: inline-block;
+	}
+
+	.carrusel
+	{
+		padding-top: 43.2px;
+	}
+
+	.biografia
+	{
+		flex-direction: row;
+	}
+
+	aside	
+	{
+		justify-content: flex-start;
+	}
+
+	aside .widget
+	{
+	margin: 10px;
+	width: 94%;
+	}
+
+	.ubicacion
+	{
+	display: flex;
+	flex-direction: row;
+	}
+
+	footer nav
+	{
+		width: 40%;
+	}
+}
