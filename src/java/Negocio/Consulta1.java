@@ -359,9 +359,7 @@ public class Consulta1 extends Conexion
 
     public static void main(String[] args) throws SQLException
     {
-       // Consulta1 registro = new Consulta1("root","root");
-        Consulta1 log = new Consulta1("root","root");
-        // System.out.println(registro.Registrarse("Joel Romero","joelrg1288@gmail.com","12345","12345")); /*Usuario,correo,contraseña,contraseña1*/	
-       // System.out.println(log.Login("y_tam_hhw@hotmail.com","Contraseña17")); /*Correo, contraseña*/
+        Consulta1 test = new Consulta1("root","root");
+        test.Tiempo("abel.mejia.hdz@gmail.com");
     }
 }
