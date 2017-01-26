@@ -171,6 +171,28 @@ public class Consulta1 extends Conexion
         }
         return "Insertar en Registro: OK";
     }
+
+
+
+    public String SumarIntento (String user) throws SQLException    /*SE SUMA UN INTENTO FALLIDO DE LOGUEO*/
+    {
+        int intentos = NumeroIntentos(user);
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "UPDATE registro SET intentos=? WHERE id_user=?";
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setInt(1,intentos+1);
+            sqlP.setInt(2,usuario);
+            sqlP.executeUpdate();
+            System.out.println("Intento Sumado");
+        }catch(SQLException ex)
+        {
+            System.out.println("Error al intentar sumar el intento fallido de Logueo "+ex.getMessage());
+        }
+        return "Intento sumado: OK";
+    }
     
     
     
