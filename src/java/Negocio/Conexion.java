@@ -21,10 +21,10 @@ import java.sql.SQLException;
 public class Conexion {
     public static String strUsuario = "";
 	public static String strPassword = "";
-	public static Statement sql=null;
-	public static PreparedStatement sqlP=null;
-        public static PreparedStatement sqlP2=null;
-	public static ResultSet rs=null;
+	public static Statement sql = null;
+	public static PreparedStatement sqlP = null;
+        public static PreparedStatement sqlP2 = null;
+	public static ResultSet rs = null;
 	public static Connection con = null;   
 	public static String HOST = "localhost";
 	public static String PORT = "3306";
@@ -40,7 +40,7 @@ public class Conexion {
 			Class.forName("com.mysql.jdbc.Driver");
 		}catch(ClassNotFoundException e)
 		{
-			System.out.println("ERROR: Error al cargar la clase del Driver");
+			System.out.println("ERROR: Error al cargar la clase del Driver "+e.getMessage());
 		}
 	}
 
@@ -60,7 +60,7 @@ public class Conexion {
 			rs.close();
 			con.close();
 		}catch(SQLException ex){
-                    System.out.println("error al desconectar"+ex);
+                    System.out.println("Error al desconectar "+ex);
                 }
 	}
 }
