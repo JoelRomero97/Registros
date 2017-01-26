@@ -319,6 +319,44 @@ public class Consulta1 extends Conexion
 
 
 
+    public boolean Tiempo (String user) throws SQLException
+	{
+	    long minutosDia = 1440;         /*MINUTOS EN UN DIA*/
+	    long minutosMes = 43200;        /*MINUTOS EN UN MES*/
+	    long minutosAnio = 518400;       /*MINUTOS EN UN AÑO*/
+	    boolean resp = true;
+	    Date base = new Date();
+	    int usuario = ObtenerId(user);
+	    Conectar();
+	    String str = "SELECT hora FROM registro WHERE id_user=?";
+	    try
+	    {
+	        sqlP = (PreparedStatement) con.prepareStatement(str);
+	        sqlP.setInt(1, usuario);
+	        rs = sqlP.executeQuery();
+	        while(rs.next())
+	        {
+	            base = rs.getTime("hora");
+	            System.out.println(base); 
+	        }
+	        Desconectar();
+	    }catch(SQLException ex)
+	    {
+	        Desconectar();
+	        System.out.println("Error al intentar contar los minutos "+ex.getMessage());
+	    }
+	    Calendar cal = Calendar.getInstance();
+	    
+	    /*Date fecha = new Date();
+	    long dia = fecha.getTime();
+	    System.out.println(fecha);*/
+	    
+	    
+	    return resp;
+	}
+
+
+
     public static void main(String[] args) throws SQLException
     {
        // Consulta1 registro = new Consulta1("root","root");
