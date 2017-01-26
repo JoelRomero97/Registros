@@ -222,7 +222,45 @@ public class Consulta1 extends Conexion
 
 
 
-	    
+	 public String BloquearUsuario (String user) throws SQLException     /*BLOQUEA AL USUARIO*/
+    {
+        int usuario = ObtenerId(user);
+        Conectar();
+        int status  = 0;
+        String str = "UPDATE usuario SET status=? WHERE id_user=?";
+        try
+        {
+        sqlP = (PreparedStatement) con.prepareStatement(str);
+        sqlP.setInt(1,status);
+        sqlP.setInt(2,usuario);
+        sqlP.executeUpdate();
+        }catch(SQLException ex)
+        {
+            System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
+        }
+        return "Usuario Bloqueado: OK";
+    }
+    
+    
+    
+    public String DesbloquearUsuario (String user) throws SQLException      /*DESBLOQUEA AL USUARIO*/
+    {
+        int status = 1;
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "UPDATE usuario SET status=? WHERE id_user=?";
+        try
+        {
+        sqlP = (PreparedStatement) con.prepareStatement(str);
+        sqlP.setInt(1,status);
+        sqlP.setInt(2,usuario);
+        sqlP.executeUpdate();
+        }catch(SQLException ex)
+        {
+            System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
+        }
+        return "Usuario Desbloqueado: OK";
+    }   
 
 
 
