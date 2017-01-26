@@ -39,8 +39,6 @@ public class Servlet extends HttpServlet
         String email = req.getParameter("correo");
         String password = req.getParameter("contrasena");
         out.println(" ----------------------- ");
-        Pattern pat1 = Pattern.compile("[a-zA-z0-9-_.]{3,}@[a-zA-Z0-9]{2,}[.][a-zA-Z]{2,}");
-        Matcher mat1 = pat1.matcher(email);
         Pattern pat = Pattern.compile("[a-zA-Z0-9]{8,}");
         Matcher mat = pat.matcher(password);
         MessageDigest md = null;
