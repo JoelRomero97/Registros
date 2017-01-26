@@ -260,7 +260,29 @@ public class Consulta1 extends Conexion
             System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
         }
         return "Usuario Desbloqueado: OK";
-    }   
+    }
+
+
+
+    public String CeroIntentos (String user) throws SQLException            /*SE PONE A 0 EL NUMERO DE INTENTOS FALLIDOS*/
+    {
+        int num = 0;
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "UPDATE registro SET intentos=? WHERE  id_user=?";
+        try
+        {
+        sqlP = (PreparedStatement) con.prepareStatement(str);
+        sqlP.setInt(1,num);
+        sqlP.setInt(2, usuario);
+        sqlP.executeUpdate();
+        System.out.println("Número de intentos de logueo fallidos en 0. ");
+        }catch(SQLException ex)
+        {
+            System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
+        }
+        return "Se pusieron en cero los intentos fallidos: OK";
+    }
 
 
 
