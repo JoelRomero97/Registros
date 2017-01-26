@@ -3,6 +3,9 @@ package Negocio;
 
 import com.mysql.jdbc.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,51 +19,64 @@ import java.sql.SQLException;
  */
 public class Consulta1 extends Conexion
 {
-    public Consulta1(String usr, String pwd) throws SQLException 
+    
+    public Consulta1 (String usr, String pwd) throws SQLException       /*SE SUPERPONE EL MÉTODO DE CONEXION*/
     {
         super(usr, pwd);
     }
     
-    public String Registrarse (String usuario, String correo, String contrasena, String contrasena1) throws SQLException
+    
+    
+    public String Registrarse (String usuario, String correo, String contrasena, String contrasena1) throws SQLException        /*REGISTRA AL USUARIO*/
     {	
         Conectar();
         String str = "INSERT INTO usuario (username,email, pass) VALUES (?,?,?);";
         System.out.println(usuario+" -- "+correo+" -- "+contrasena+" -- "+contrasena1);
+        try
+        {
         sqlP = (PreparedStatement) con.prepareStatement(str);
         sqlP.setString(1, usuario);
         sqlP.setString(2, correo);
         sqlP.setString(3, contrasena);
         sqlP.executeUpdate();
+        }catch(SQLException ex)
+        {
+            System.out.println("Error al intentar registrar al usuario "+ex.getMessage());
+        }
         return "User register: OK";
     }
     
-    public boolean Login(String correo, String contrasena) throws SQLException
+    
+    
+    public boolean Login (String correo, String contrasena) throws SQLException     /*LOGUEA O NO AL USUARIO*/
     {
         Conectar();
         Boolean resp = true;
         String str1 = "SELECT pass,status FROM usuario WHERE email=? OR username=?";
-        int uno = 1;
-        String status = "";
-        status = String.valueOf(uno);
-        status= Integer.toString(uno);
+        String status = "1";
         System.out.println("-----------------------");
         System.out.println(correo);
         System.out.println(contrasena);
         try 
         {
-            sqlP2 = (PreparedStatement) con.prepareStatement(str1);
-            sqlP2.setString(1, correo);
-            sqlP2.setString(2, correo);
-            rs = sqlP2.executeQuery();
+            sqlP = (PreparedStatement) con.prepareStatement(str1);
+            sqlP.setString(1, correo);
+            sqlP.setString(2, correo);
+            rs = sqlP.executeQuery();
             if(rs.next())
             {
-                rs = sqlP2.executeQuery();
+                rs = sqlP.executeQuery();
                 while(rs.next())
                 {
                     if((rs.getString("pass")).equals(contrasena))
                     {
                         if((rs.getString("status").equals(status)))
                         {
+                            /*********AQUI SE LE PONE EN 0 LOS INTENTOS DE INICIO DE SESIÓN*******/
+                            
+                            
+                            
+                            
                             System.out.println("-----------------------");
                             System.out.println("Inicio de sesión correcto");
                         }else
@@ -70,7 +86,25 @@ public class Consulta1 extends Conexion
                         }
                     }else
                     {
-                        System.out.println("El usuario y/o contraseña no coinciden. ");
+                        /*********AQUI VA LA PARTE DE SUMARLE UN INTENTO*******/
+                        
+                        
+                        
+                        
+                        
+                        /********AQUI SE VERIFICARÁ SI YA TIENE 3 O MÁS******/
+                        if((NumeroIntentos(correo))>3)
+                        {
+                            
+                        }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        System.out.println("El usuario y/o contraseña no coinciden. "); 
                         resp = false;
                     }
                 }//cierra while
@@ -89,6 +123,38 @@ public class Consulta1 extends Conexion
         return resp;
     }//cierra login
     
+    
+    
+    public int NumeroIntentos (String user) throws SQLException     /*OBTIENE EL NÚMERO DE INTENTOS FALLIDOS*/
+    {
+        int resp = 0;
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "SELECT intentos FROM registro WHERE id_user=?";
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setInt(1,usuario);
+            rs = sqlP.executeQuery();
+            while(rs.next())
+            {
+                resp = rs.getInt("intentos");
+            }
+            Desconectar();
+        }catch(SQLException ex)
+        {            
+            Desconectar();
+            System.out.println("Error al intentar obtener los intentos de logueo fallidos "+ex.getMessage());
+        }
+        return resp;
+    }
+
+
+
+	    
+
+
+
     public static void main(String[] args) throws SQLException
     {
        // Consulta1 registro = new Consulta1("root","root");
