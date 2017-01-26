@@ -151,6 +151,28 @@ public class Consulta1 extends Conexion
 
 
 
+    public String PrimerIntento (String user) throws SQLException       /*REGISTRA AL USUARIO SI ES SU PRIMER INTENTO FALLIDO*/
+    {
+        int num = 1;
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "INSERT INTO registro (intentos,id_user) VALUES (?,?);";
+        try
+        {
+        sqlP = (PreparedStatement) con.prepareStatement(str);
+        sqlP.setInt(1,num);
+        sqlP.setInt(2,usuario);
+        sqlP.executeUpdate();
+            System.out.println("Usuario insertado en registro. ");
+        }catch(SQLException ex)
+        {
+            System.out.println("Error al intentar ingresar a registro "+ex.getMessage());
+        }
+        return "Insertar en Registro: OK";
+    }
+
+
+
 	    
 
 
