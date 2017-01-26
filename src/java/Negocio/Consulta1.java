@@ -122,6 +122,55 @@ public class Consulta1 extends Conexion
         }//cierra catch
         return resp;
     }//cierra login
+
+
+
+    public int ObtenerId (String user) throws SQLException      /*OBTENEMOS EL ID PARA INGRESARLO A REGISTRO*/
+    {
+        Conectar();
+        int resp = 0;
+        String str = "SELECT id_user FROM usuario WHERE username=? OR email=?";
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setString(1,user);
+            sqlP.setString(2,user);
+            rs = sqlP.executeQuery();
+            while(rs.next())
+            {
+                resp = rs.getInt("id_user");
+            }
+            System.out.println(resp);
+            Desconectar();
+        }catch(SQLException e)
+        {
+            Desconectar();
+            System.out.println("Error al intentar obtener ID "+e.getMessage());
+        }
+        return resp;
+    }
+
+
+
+    public String PrimerIntento (String user) throws SQLException       /*REGISTRA AL USUARIO SI ES SU PRIMER INTENTO FALLIDO*/
+    {
+        int num = 1;
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "INSERT INTO registro (intentos,id_user) VALUES (?,?);";
+        try
+        {
+        sqlP = (PreparedStatement) con.prepareStatement(str);
+        sqlP.setInt(1,num);
+        sqlP.setInt(2,usuario);
+        sqlP.executeUpdate();
+            System.out.println("Usuario insertado en registro. ");
+        }catch(SQLException ex)
+        {
+            System.out.println("Error al intentar ingresar a registro "+ex.getMessage());
+        }
+        return "Insertar en Registro: OK";
+    }
     
     
     
@@ -147,28 +196,6 @@ public class Consulta1 extends Conexion
             System.out.println("Error al intentar obtener los intentos de logueo fallidos "+ex.getMessage());
         }
         return resp;
-    }
-
-
-
-    public String PrimerIntento (String user) throws SQLException       /*REGISTRA AL USUARIO SI ES SU PRIMER INTENTO FALLIDO*/
-    {
-        int num = 1;
-        int usuario = ObtenerId(user);
-        Conectar();
-        String str = "INSERT INTO registro (intentos,id_user) VALUES (?,?);";
-        try
-        {
-        sqlP = (PreparedStatement) con.prepareStatement(str);
-        sqlP.setInt(1,num);
-        sqlP.setInt(2,usuario);
-        sqlP.executeUpdate();
-            System.out.println("Usuario insertado en registro. ");
-        }catch(SQLException ex)
-        {
-            System.out.println("Error al intentar ingresar a registro "+ex.getMessage());
-        }
-        return "Insertar en Registro: OK";
     }
 
 
