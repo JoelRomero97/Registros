@@ -347,6 +347,64 @@ public class Consulta1 extends Conexion
         } 
         return resp;
     }
+    
+    
+    
+    public boolean ExisteUsuario (String user) throws SQLException          /*NOS DICE SI EL USUARIO ESTA REGISTRADO*/
+    {
+        Conectar();
+        boolean resp = true;
+        int usuario = ObtenerId(user);
+        String str = "SELECT * FROM usuario WHERE id_user=?";
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setInt(1,usuario);
+            rs = sqlP.executeQuery();
+            if(rs.next())
+            {
+                System.out.println("El usuario "+user+" existe en la base de datos.");
+            }else
+            {
+                resp = false;
+                System.out.println("El usuario "+user+" no existe en la base de datos.");
+            }
+        }catch(SQLException ex)
+        {
+            Desconectar();
+            System.out.println("Error al intentar verificar si existe el usuario "+user+": "+ex.getMessage());
+        }
+        return resp;
+    }
+    
+    
+    
+    public boolean ExisteUsuarioEnRegistro (String user) throws SQLException        /*NOS DICE SI EL USUARIO YA FALLO EN EL LOGUEO*/
+    {
+        boolean resp = true;
+        Conectar();
+        int usuario = ObtenerId(user);
+        String str = "SELECT * FROM registro WHERE id_user=?";
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setInt(1, usuario);
+            rs = sqlP.executeQuery();
+            if(rs.next())
+            {
+                System.out.println("El usuario "+user+" ya tuvo al menos 1 intento fallido de Login.");
+            }else
+            {
+                resp = false;
+                System.out.println("El usuario "+user+" no ha tenido ningún intento de Login.");
+            }
+        }catch(SQLException ex)
+        {
+            Desconectar();
+            System.out.println("Error al intentar verificar si el usuario "+user+" ya falló en algún intento de Login." +ex.getMessage());
+        }
+        return resp;
+    }
 
 
 
