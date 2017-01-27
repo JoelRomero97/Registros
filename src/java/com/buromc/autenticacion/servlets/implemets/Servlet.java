@@ -33,18 +33,19 @@ public class Servlet extends HttpServlet
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException 
     {
         PrintWriter out = res.getWriter();
-        out.println("Inicia Servlet");
         res.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
         String email = req.getParameter("correo");
         String password = req.getParameter("contrasena");
-        out.println(" ----------------------- ");
         Pattern pat = Pattern.compile("[a-zA-Z0-9]{8,}");
         Matcher mat = pat.matcher(password);
         MessageDigest md = null;
-        try {
+        String contrasena = null;
+        try 
+        {
             md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException ex) {
+        } catch (NoSuchAlgorithmException ex) 
+        {
             Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
         }
             if(mat.find())   /*LA CONTRASEÑA ES VÁLIDA*/
@@ -57,21 +58,32 @@ public class Servlet extends HttpServlet
                     String hex = Integer.toHexString(0xff & byteData[i]);
                     if(hex.length() == 1) hexString.append('0');
                     hexString.append(hex);
+                    contrasena = hexString.toString();
                 }
                 try
                 {
                     Consulta1 log = new Consulta1("root","root");
-                    if(log.Login(email,hexString.toString()))    /************ENVIAMOS LA CONTRASEÑA EN HASH************/ 
-                    {   
-                        out.println("Inicio de Sesión Correcto. ");
-                    }else 
+                    switch (log.Login(email,contrasena))            /************ENVIAMOS LA CONTRASEÑA EN HASH************/
                     {
-                        out.println("El usuario no existe, la contraseña es incorrecta o no tiene permiso para ingresar. ");
+                        case 4:
+                            out.println("Inicio de Sesión Correcto.");
+                            break;
+                        case 3:
+                            out.println("El usuario está bloqueado.");
+                            break;
+                        case 2:
+                            out.println("La contraseña es incorrecta.");
+                            break;
+                        case 1:
+                            out.println("El usuario ingresado no existe, regístrese primero.");
+                            break;
+                        default:
+                            out.println("Error dentro de la consulta.");
+                            break;
                     }
                 }catch(SQLException ex)
                 {
-                    out.println("Contraseña Incorrecta. ");
-                    out.println(ex);
+                    out.println("Error al intentar iniciar sesión: "+ex.getMessage());
                 }
             }else
             {   

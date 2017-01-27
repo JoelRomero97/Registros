@@ -18,7 +18,6 @@ import java.util.*;
  */
 public class Consulta1 extends Conexion
 {
-    
     public Consulta1 (String usr, String pwd) throws SQLException       /*SE SUPERPONE EL MÉTODO DE CONEXION*/
     {
         super(usr, pwd);
@@ -40,6 +39,7 @@ public class Consulta1 extends Conexion
         sqlP.executeUpdate();
         }catch(SQLException ex)
         {
+            Desconectar();
             System.out.println("Error al intentar registrar al usuario "+ex.getMessage());
         }
         return "User register: OK";
@@ -108,10 +108,10 @@ public class Consulta1 extends Conexion
             System.out.println("Error al intentar iniciar sesión: "+ ex.getMessage());
         }
         return resp;
-    }
-
-
-
+    }  
+    
+    
+    
     public int ObtenerId (String user) throws SQLException      /*OBTENEMOS EL ID PARA INGRESARLO A REGISTRO*/
     {
         Conectar();
@@ -139,9 +139,9 @@ public class Consulta1 extends Conexion
         }
         return resp;
     }
-
-
-
+    
+    
+    
     public String PrimerIntento (String user) throws SQLException       /*REGISTRA AL USUARIO SI ES SU PRIMER INTENTO FALLIDO*/
     {
         int num = 1;
@@ -160,29 +160,6 @@ public class Consulta1 extends Conexion
             System.out.println("Error al intentar ingresar a registro "+ex.getMessage());
         }
         return "Insertar en Registro: OK";
-    }
-
-
-
-    public String SumarIntento (String user) throws SQLException    /*SE SUMA UN INTENTO FALLIDO DE LOGUEO*/
-    {
-        int intentos = NumeroIntentos(user);
-        int usuario = ObtenerId(user);
-        Conectar();
-        String str = "UPDATE registro SET intentos=? WHERE id_user=?";
-        try
-        {
-            sqlP = (PreparedStatement) con.prepareStatement(str);
-            sqlP.setInt(1,intentos+1);
-            sqlP.setInt(2,usuario);
-            sqlP.executeUpdate();
-            System.out.println("Intento Sumado al usuario "+user);
-        }catch(SQLException ex)
-        {
-            Desconectar();
-            System.out.println("Error al intentar sumar el intento fallido de Logueo "+ex.getMessage());
-        }
-        return "Intento sumado: OK";
     }
     
     
@@ -210,9 +187,54 @@ public class Consulta1 extends Conexion
         }
         return resp;
     }
-
-
-
+    
+    
+    
+    public String BorrarIntentos (String user) throws SQLException            /*SE PONE A 0 EL NUMERO DE INTENTOS FALLIDOS*/
+    {
+        int num = 0;
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "UPDATE registro SET intentos=? WHERE  id_user=?";
+        try
+        {
+        sqlP = (PreparedStatement) con.prepareStatement(str);
+        sqlP.setInt(1,num);
+        sqlP.setInt(2, usuario);
+        sqlP.executeUpdate();
+        System.out.println("El usuario "+user+" ya no tiene intentos fallidos.");
+        }catch(SQLException ex)
+        {
+            System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
+        }
+        return "Se pusieron en cero los intentos fallidos: OK";
+    }
+    
+    
+    
+    public String SumarIntento (String user) throws SQLException    /*SE SUMA UN INTENTO FALLIDO DE LOGUEO*/
+    {
+        int intentos = NumeroIntentos(user);
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "UPDATE registro SET intentos=? WHERE id_user=?";
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setInt(1,intentos+1);
+            sqlP.setInt(2,usuario);
+            sqlP.executeUpdate();
+            System.out.println("Intento Sumado al usuario "+user);
+        }catch(SQLException ex)
+        {
+            Desconectar();
+            System.out.println("Error al intentar sumar el intento fallido de Logueo "+ex.getMessage());
+        }
+        return "Intento sumado: OK";
+    }
+    
+    
+    
     public boolean UsuarioBloqueado (String user) throws SQLException       /*NOS DICE SI EL USUARIO ESTÁ O NO BLOQUEADO*/
     {
         boolean resp = false;
@@ -244,9 +266,9 @@ public class Consulta1 extends Conexion
         }
         return resp;
     }
-
-
-
+    
+    
+    
     public String BloquearUsuario (String user) throws SQLException     /*BLOQUEA AL USUARIO*/
     {
         int usuario = ObtenerId(user);
@@ -290,28 +312,6 @@ public class Consulta1 extends Conexion
         }
         return "Usuario Desbloqueado: OK";
     }
-
-
-
-    public String BorrarIntentos (String user) throws SQLException            /*SE PONE A 0 EL NUMERO DE INTENTOS FALLIDOS*/
-    {
-        int num = 0;
-        int usuario = ObtenerId(user);
-        Conectar();
-        String str = "UPDATE registro SET intentos=? WHERE  id_user=?";
-        try
-        {
-        sqlP = (PreparedStatement) con.prepareStatement(str);
-        sqlP.setInt(1,num);
-        sqlP.setInt(2, usuario);
-        sqlP.executeUpdate();
-        System.out.println("El usuario "+user+" ya no tiene intentos fallidos.");
-        }catch(SQLException ex)
-        {
-            System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
-        }
-        return "Se pusieron en cero los intentos fallidos: OK";
-    }
     
     
     
@@ -346,7 +346,7 @@ public class Consulta1 extends Conexion
         } 
         return resp;
     }
-    
+            
     
     
     public boolean ExisteUsuario (String user) throws SQLException          /*NOS DICE SI EL USUARIO ESTA REGISTRADO*/
@@ -404,9 +404,9 @@ public class Consulta1 extends Conexion
         }
         return resp;
     }
-
-
-
+    
+    
+    
     public boolean Tiempo (String user) throws SQLException, ParseException             /*NOS DICE SI YA PASARON O NO 20 MINUTOS PARA DESBLOQUEAR*/
     {
         long minutosDia = 1440;         /*MINUTOS EN UN DIA*/
@@ -439,7 +439,7 @@ public class Consulta1 extends Conexion
         }
         return resp;
     }
-
+    
 
 
     public static void main (String[] args) throws SQLException, ParseException
