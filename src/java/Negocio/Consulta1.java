@@ -177,9 +177,10 @@ public class Consulta1 extends Conexion
             sqlP.setInt(1,intentos+1);
             sqlP.setInt(2,usuario);
             sqlP.executeUpdate();
-            System.out.println("Intento Sumado");
+            System.out.println("Intento Sumado al usuario "+user);
         }catch(SQLException ex)
         {
+            Desconectar();
             System.out.println("Error al intentar sumar el intento fallido de Logueo "+ex.getMessage());
         }
         return "Intento sumado: OK";
@@ -288,7 +289,7 @@ public class Consulta1 extends Conexion
 
 
 
-    public String CeroIntentos (String user) throws SQLException            /*SE PONE A 0 EL NUMERO DE INTENTOS FALLIDOS*/
+    public String BorrarIntentos (String user) throws SQLException            /*SE PONE A 0 EL NUMERO DE INTENTOS FALLIDOS*/
     {
         int num = 0;
         int usuario = ObtenerId(user);
@@ -300,7 +301,7 @@ public class Consulta1 extends Conexion
         sqlP.setInt(1,num);
         sqlP.setInt(2, usuario);
         sqlP.executeUpdate();
-        System.out.println("Número de intentos de logueo fallidos en 0. ");
+        System.out.println("El usuario "+user+" ya no tiene intentos fallidos.");
         }catch(SQLException ex)
         {
             System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
