@@ -48,80 +48,68 @@ public class Consulta1 extends Conexion
     
     
     
-    public boolean Login (String correo, String contrasena) throws SQLException     /*LOGUEA O NO AL USUARIO*/
+    public int Login (String correo, String contrasena) throws SQLException             /*LOGUEA O NO AL USUARIO*/
     {
         Conectar();
-        Boolean resp = true;
-        String str1 = "SELECT pass,status FROM usuario WHERE email=? OR username=?";
-        String status = "1";
-        System.out.println("-----------------------");
+        int resp = 5;
+        String str = "SELECT pass,status FROM usuario WHERE email=? OR username=?";
         System.out.println(correo);
         System.out.println(contrasena);
         try 
         {
-            sqlP = (PreparedStatement) con.prepareStatement(str1);
-            sqlP.setString(1, correo);
-            sqlP.setString(2, correo);
-            rs = sqlP.executeQuery();
-            if(rs.next())
+            if(ExisteUsuario(correo)&&ObtenerId(correo)!=0)
             {
+                sqlP = (PreparedStatement) con.prepareStatement(str);
+                sqlP.setString(1, correo);
+                sqlP.setString(2, correo);
                 rs = sqlP.executeQuery();
                 while(rs.next())
                 {
-                    if((rs.getString("pass")).equals(contrasena))
+                    if(ContraseñaCorrecta(correo,contrasena))
                     {
-                        if((rs.getString("status").equals(status)))
+                        if(!UsuarioBloqueado(correo))
                         {
-                            /*********AQUI SE LE PONE EN 0 LOS INTENTOS DE INICIO DE SESIÓN*******/
-                            
-                            
-                            
-                            
+                            BorrarIntentos(correo);
                             System.out.println("-----------------------");
                             System.out.println("Inicio de sesión correcto");
-                        }else
+                            resp = 4;
+                        }else //EL USUARIO ESTA BLOQUEADO
                         {
-                            System.out.println("El usuario no tiene permisos para acceder. ");
-                            resp = false;
+                            System.out.println("El usuario no tiene permisos para acceder o está bloqueado. ");
+                            resp = 3;
                         }
-                    }else
+                    }else   //LA CONTRASEÑA ES INCORRECTA
                     {
-                        /*********AQUI VA LA PARTE DE SUMARLE UN INTENTO*******/
-                        
-                        
-                        
-                        
-                        
-                        /********AQUI SE VERIFICARÁ SI YA TIENE 3 O MÁS******/
-                        if((NumeroIntentos(correo))>3)
+                        if(NumeroIntentos(correo)>=3&&ExisteUsuarioEnRegistro(correo))
                         {
-                            
+                            BloquearUsuario(correo);
+                            resp = 3;
+                        }else if(NumeroIntentos(correo)>=0&&ExisteUsuarioEnRegistro(correo))
+                        {
+                            SumarIntento(correo);
+                            resp = 2;
+                        }else if(!ExisteUsuarioEnRegistro(correo))
+                        {
+                            PrimerIntento(correo);
+                            resp = 2;
                         }
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        System.out.println("El usuario y/o contraseña no coinciden. "); 
-                        resp = false;
+                        System.out.println("La contraseña no coincide con el usuario: "+correo); 
                     }
                 }//cierra while
-            }else
+            }else if(!ExisteUsuario(correo)||ObtenerId(correo)==0)
             {
                 System.out.println("El usuario no existe, registrarse primero. ");
-                resp = false;
+                resp = 1;
             }
             Desconectar();
         }catch (SQLException ex) 
         {
-            resp=false;
+            resp=5;
             Desconectar();
             System.out.println("Error al intentar iniciar sesión: "+ ex.getMessage());
-        }//cierra catch
+        }
         return resp;
-    }//cierra login
+    }
 
 
 
