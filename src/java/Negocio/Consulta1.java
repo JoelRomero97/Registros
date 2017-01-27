@@ -128,12 +128,15 @@ public class Consulta1 extends Conexion
             {
                 resp = rs.getInt("id_user");
             }
-            System.out.println(resp);
-            Desconectar();
+            System.out.println("El ID del usuario es: "+resp);
         }catch(SQLException e)
         {
             Desconectar();
             System.out.println("Error al intentar obtener ID "+e.getMessage());
+        }
+        if (resp==0)
+        {
+            System.out.println("El usuario "+user+" no existe.");
         }
         return resp;
     }
