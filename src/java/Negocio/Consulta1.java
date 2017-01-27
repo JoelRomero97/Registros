@@ -203,7 +203,7 @@ public class Consulta1 extends Conexion
             {
                 resp = rs.getInt("intentos");
             }
-            Desconectar();
+            System.out.println("El usuario "+user+" tiene "+resp+" intentos falidos.");
         }catch(SQLException ex)
         {            
             Desconectar();
@@ -214,40 +214,41 @@ public class Consulta1 extends Conexion
 
 
 
-    public boolean UsuarioBloqueado (String user) throws SQLException
-	{
-	    boolean resp = false;
-	    int usuario = ObtenerId(user);
-	    int status = 0;
-	    Conectar();
-	    String str = "SELECT status FROM usuario WHERE id_user=?";
-	    try
-	    {
-	        sqlP = (PreparedStatement) con.prepareStatement(str);
-	        sqlP.setInt(1, usuario);
-	        rs = sqlP.executeQuery();
-	        while(rs.next())
-	        {
-	            status = rs.getInt("status");
-	        }
-	        if(status==0)
-	        {
-	            resp=true;
-	        }
-	        Desconectar();
-	    }catch(SQLException ex)
-	    {
-	        Desconectar();
-	        System.out.println("Error al intentar verificar si el usuario está o no bloqueado "+ex.getMessage());
-	    }
-	    System.out.println(resp);
-	    System.out.println(status);
-	    return resp;
-	}
+    public boolean UsuarioBloqueado (String user) throws SQLException       /*NOS DICE SI EL USUARIO ESTÁ O NO BLOQUEADO*/
+    {
+        boolean resp = false;
+        int usuario = ObtenerId(user);
+        int status = 0;
+        Conectar();
+        String str = "SELECT status FROM usuario WHERE id_user=?";
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setInt(1, usuario);
+            rs = sqlP.executeQuery();
+            while(rs.next())
+            {
+                status = rs.getInt("status");
+            }
+            if(status==0)
+            {
+                resp=true;
+                System.out.println("El usuario "+user+" está bloqueado.");
+            }else
+            {
+                System.out.println("El usuario "+user+" no está bloqueado.");
+            }
+        }catch(SQLException ex)
+        {
+            Desconectar();
+            System.out.println("Error al intentar verificar si el usuario está o no bloqueado "+ex.getMessage());
+        }
+        return resp;
+    }
 
 
 
-	 public String BloquearUsuario (String user) throws SQLException     /*BLOQUEA AL USUARIO*/
+    public String BloquearUsuario (String user) throws SQLException     /*BLOQUEA AL USUARIO*/
     {
         int usuario = ObtenerId(user);
         Conectar();
@@ -259,8 +260,10 @@ public class Consulta1 extends Conexion
         sqlP.setInt(1,status);
         sqlP.setInt(2,usuario);
         sqlP.executeUpdate();
+            System.out.println("El usuario "+user+" ha sido bloqueado.");
         }catch(SQLException ex)
         {
+            Desconectar();
             System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
         }
         return "Usuario Bloqueado: OK";
@@ -280,8 +283,10 @@ public class Consulta1 extends Conexion
         sqlP.setInt(1,status);
         sqlP.setInt(2,usuario);
         sqlP.executeUpdate();
+        System.out.println("El usuario "+user+" ha sido desbloqueado.");
         }catch(SQLException ex)
         {
+            Desconectar();
             System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
         }
         return "Usuario Desbloqueado: OK";
@@ -307,6 +312,40 @@ public class Consulta1 extends Conexion
             System.out.println("Error al intentar bloquear al usuario "+ex.getMessage());
         }
         return "Se pusieron en cero los intentos fallidos: OK";
+    }
+    
+    
+    
+    public boolean ContraseñaCorrecta (String user, String password) throws SQLException        /*INDICA SI ES CORRECTA O NO LA CONTRASEÑA*/
+    {
+        boolean resp = true;
+        String str = "SELECT pass FROM usuario WHERE id_user=?";
+        String pwd;
+        int usuario = ObtenerId(user);
+        Conectar();
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setInt(1, usuario);
+            rs = sqlP.executeQuery();
+            while(rs.next())
+            {
+                pwd = rs.getString("pass");
+                if(password.equals(pwd))
+                {
+                    System.out.println("La contraseña del usuario "+user+" es correcta.");
+                }else
+                {
+                    resp = false;
+                    System.out.println("La contraseña del usuario "+user+" es incorrecta.");
+                }
+            }
+        }catch(SQLException ex)
+        {
+            Desconectar();
+            System.out.println("Error al intentar verificar si la contraseña del usuario "+user+" es correcta. "+ex.getMessage());
+        } 
+        return resp;
     }
 
 
