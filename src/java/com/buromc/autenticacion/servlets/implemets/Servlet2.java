@@ -33,14 +33,13 @@ public class Servlet2 extends HttpServlet
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException 
     {
         PrintWriter out = res.getWriter();
-        out.println("Inicia Servlet");
         res.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
         String user = req.getParameter("nombre");
         String email = req.getParameter("correo");
         String password = req.getParameter("contrasena");
         String password1 = req.getParameter("contrasena1");
-        out.println(" -- ");
+        String pwd = null;
         Pattern pat1 = Pattern.compile("[a-zA-z0-9-_.]{3,}@[a-zA-Z0-9]{2,}[.][a-zA-Z]{2,}");
         Matcher mat1 = pat1. matcher(email);
         MessageDigest md = null;
@@ -69,12 +68,23 @@ public class Servlet2 extends HttpServlet
                             String hex = Integer.toHexString(0xff & byteData[i]);
                             if(hex.length() == 1) hexString.append('0');
                             hexString.append(hex);
+                            pwd = hexString.toString();
                         }
                         try
                         {
                             Consulta1 registro = new Consulta1("root","root");
-                            registro.Registrarse(user,email,hexString.toString(),hexString.toString());
-                            out.println("Usuario Registrado");
+                            switch (registro.Registrarse(user,email,pwd,pwd)) 
+                            {
+                                case 1:
+                                    out.println("Usuario "+user+" registrado.");
+                                    break;
+                                case 2:
+                                    out.println("El usuario "+user+ " ya existe.");
+                                    break;
+                                default:
+                                    out.println("Error al intentar registrar al usuario "+user);
+                                    break;
+                            }
                         }catch(SQLException ex) 
                         {
                             out.println(ex);

@@ -25,24 +25,34 @@ public class Consulta1 extends Conexion
     
     
     
-    public String Registrarse (String usuario, String correo, String contrasena, String contrasena1) throws SQLException        /*REGISTRA AL USUARIO*/
+    public int Registrarse (String usuario, String correo, String contrasena, String contrasena1) throws SQLException        /*REGISTRA AL USUARIO*/
     {	
         Conectar();
+        int resp = 0;
         String str = "INSERT INTO usuario (username,email, pass) VALUES (?,?,?);";
         System.out.println(usuario+" -- "+correo+" -- "+contrasena+" -- "+contrasena1);
         try
         {
-        sqlP = (PreparedStatement) con.prepareStatement(str);
-        sqlP.setString(1, usuario);
-        sqlP.setString(2, correo);
-        sqlP.setString(3, contrasena);
-        sqlP.executeUpdate();
+            if(!ExisteUsuario(usuario))
+            {
+                resp = 1;
+                sqlP = (PreparedStatement) con.prepareStatement(str);
+                sqlP.setString(1, usuario);
+                sqlP.setString(2, correo);
+                sqlP.setString(3, contrasena);
+                sqlP.executeUpdate();
+                System.out.println("Usuario "+usuario+" registrado.");
+            }else
+            {
+                resp = 2;
+                System.out.println("El usuario "+usuario+" ya existe.");
+            }
         }catch(SQLException ex)
         {
             Desconectar();
             System.out.println("Error al intentar registrar al usuario "+ex.getMessage());
         }
-        return "User register: OK";
+        return resp;
     }
     
     
@@ -445,6 +455,6 @@ public class Consulta1 extends Conexion
     public static void main (String[] args) throws SQLException, ParseException
     {   
         Consulta1 test = new Consulta1("root","root");
-        test.Tiempo("abel.mejia.hdz@gmail.com");
+        //test.Tiempo("abel.mejia.hdz@gmail.com");
     }
 }
