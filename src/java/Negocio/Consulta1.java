@@ -3,9 +3,8 @@ package Negocio;
 
 import com.mysql.jdbc.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.text.*;
+import java.util.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -408,46 +407,43 @@ public class Consulta1 extends Conexion
 
 
 
-    public boolean Tiempo (String user) throws SQLException
-	{
-	    long minutosDia = 1440;         /*MINUTOS EN UN DIA*/
-	    long minutosMes = 43200;        /*MINUTOS EN UN MES*/
-	    long minutosAnio = 518400;       /*MINUTOS EN UN AÑO*/
-	    boolean resp = true;
-	    Date base = new Date();
-	    int usuario = ObtenerId(user);
-	    Conectar();
-	    String str = "SELECT hora FROM registro WHERE id_user=?";
-	    try
-	    {
-	        sqlP = (PreparedStatement) con.prepareStatement(str);
-	        sqlP.setInt(1, usuario);
-	        rs = sqlP.executeQuery();
-	        while(rs.next())
-	        {
-	            base = rs.getTime("hora");
-	            System.out.println(base); 
-	        }
-	        Desconectar();
-	    }catch(SQLException ex)
-	    {
-	        Desconectar();
-	        System.out.println("Error al intentar contar los minutos "+ex.getMessage());
-	    }
-	    Calendar cal = Calendar.getInstance();
-	    
-	    /*Date fecha = new Date();
-	    long dia = fecha.getTime();
-	    System.out.println(fecha);*/
-	    
-	    
-	    return resp;
-	}
-
-
-
-    public static void main(String[] args) throws SQLException
+    public boolean Tiempo (String user) throws SQLException, ParseException             /*NOS DICE SI YA PASARON O NO 20 MINUTOS PARA DESBLOQUEAR*/
     {
+        long minutosDia = 1440;         /*MINUTOS EN UN DIA*/
+        long minutosMes = 43200;        /*MINUTOS EN UN MES*/
+        long minutosAnio = 518400;       /*MINUTOS EN UN AÑO*/
+        boolean resp = true;
+        String horaIntento = null;
+        Date horaBase;
+        Date base = new Date();
+        int usuario = ObtenerId(user);
+        Conectar();
+        String str = "SELECT hora FROM registro WHERE id_user=?";
+        try
+        {
+            sqlP = (PreparedStatement) con.prepareStatement(str);
+            sqlP.setInt(1, usuario);
+            rs = sqlP.executeQuery();
+            while(rs.next())
+            {
+                base = rs.getTime("hora");
+                horaIntento = base.toString();
+                DateFormat DateF = new SimpleDateFormat("HH:MM:SS");
+                horaBase = DateF.parse(horaIntento);
+                System.out.println(horaBase+"    Hora del intento");
+            }
+        }catch(SQLException ex)
+        {
+            Desconectar();
+            System.out.println("Error al intentar contar los minutos "+ex.getMessage());
+        }
+        return resp;
+    }
+
+
+
+    public static void main (String[] args) throws SQLException, ParseException
+    {   
         Consulta1 test = new Consulta1("root","root");
         test.Tiempo("abel.mejia.hdz@gmail.com");
     }
