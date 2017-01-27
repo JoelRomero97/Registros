@@ -155,7 +155,7 @@ public class Consulta1 extends Conexion
         sqlP.setInt(1,num);
         sqlP.setInt(2,usuario);
         sqlP.executeUpdate();
-            System.out.println("Usuario insertado en registro. ");
+        System.out.println("Usuario "+user+" insertado en registro. ");
         }catch(SQLException ex)
         {
             System.out.println("Error al intentar ingresar a registro "+ex.getMessage());
