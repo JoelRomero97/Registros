@@ -57,7 +57,7 @@ public class Consulta1 extends Conexion
     
     
     
-    public int Login (String correo, String contrasena) throws SQLException             /*LOGUEA O NO AL USUARIO*/
+    public int Login (String correo, String contrasena) throws SQLException, ParseException             /*LOGUEA O NO AL USUARIO*/
     {
         Conectar();
         int resp = 5;
@@ -79,13 +79,22 @@ public class Consulta1 extends Conexion
                         if(!UsuarioBloqueado(correo))
                         {
                             BorrarIntentos(correo);
-                            System.out.println("-----------------------");
+                            System.out.println("---------------------------------------------");
                             System.out.println("Inicio de sesión correcto");
                             resp = 4;
                         }else //EL USUARIO ESTA BLOQUEADO
                         {
-                            System.out.println("El usuario no tiene permisos para acceder o está bloqueado. ");
-                            resp = 3;
+                            if(YaPasoElTiempo(correo))
+                            {
+                                DesbloquearUsuario(correo);
+                                BorrarIntentos(correo);
+                                resp = 4;
+                                Login(correo,contrasena);
+                            }else
+                            {
+                                System.out.println("El usuario está bloqueado.");
+                                resp = 3;
+                            }
                         }
                     }else   //LA CONTRASEÑA ES INCORRECTA
                     {
@@ -291,7 +300,7 @@ public class Consulta1 extends Conexion
         sqlP.setInt(1,status);
         sqlP.setInt(2,usuario);
         sqlP.executeUpdate();
-            System.out.println("El usuario "+user+" ha sido bloqueado.");
+            System.out.println("El usuario "+user+" ha sido bloqueado por pendejo.");
         }catch(SQLException ex)
         {
             Desconectar();
@@ -417,16 +426,37 @@ public class Consulta1 extends Conexion
     
     
     
-    public boolean Tiempo (String user) throws SQLException, ParseException             /*NOS DICE SI YA PASARON O NO 20 MINUTOS PARA DESBLOQUEAR*/
+    public boolean YaPasoElTiempo (String user) throws SQLException, ParseException             /*NOS DICE SI YA PASARON O NO 20 MINUTOS PARA DESBLOQUEAR*/
     {
-        long minutosDia = 1440;         /*MINUTOS EN UN DIA*/
-        long minutosMes = 43200;        /*MINUTOS EN UN MES*/
-        long minutosAnio = 518400;       /*MINUTOS EN UN AÑO*/
         boolean resp = true;
-        String horaIntento = null;
-        Date horaBase;
-        Date base = new Date();
+        Calendar c1 = Calendar.getInstance();
+        int añoActual, mesActual, diaActual, horaActual,minutoActual;
+        String horaActual2 = null;
+        añoActual = c1.get(Calendar.YEAR);
+        mesActual = c1.get(Calendar.MONTH);
+        diaActual = c1.get(Calendar.DAY_OF_MONTH);
+        horaActual =c1.get(Calendar.HOUR_OF_DAY);
+        minutoActual = c1.get(Calendar.MINUTE);
+        if(minutoActual>=1)
+        {
+            horaActual+=1;
+        }
+            if(mesActual<9&&diaActual<10)
+            {
+                horaActual2 = añoActual+"-0"+(mesActual+1)+"-0"+diaActual+" "+horaActual;
+            }else if(mesActual>=9&&diaActual<10)
+            {
+                horaActual2 = añoActual+"-"+(mesActual+1)+"-0"+diaActual+" "+horaActual;
+            }else if(mesActual<9&&diaActual>10)
+            {
+                horaActual2 = añoActual+"-0"+(mesActual+1)+"-"+diaActual+" "+horaActual;
+            }else
+            {
+                horaActual2 = añoActual+"-"+(mesActual+1)+"-"+diaActual+" "+horaActual;
+            }
+        Date horaIntento = new Date();
         int usuario = ObtenerId(user);
+        System.out.println("Hora actual: "+horaActual2);
         Conectar();
         String str = "SELECT hora FROM registro WHERE id_user=?";
         try
@@ -436,12 +466,19 @@ public class Consulta1 extends Conexion
             rs = sqlP.executeQuery();
             while(rs.next())
             {
-                base = rs.getTime("hora");
-                horaIntento = base.toString();
-                DateFormat DateF = new SimpleDateFormat("HH:MM:SS");
-                horaBase = DateF.parse(horaIntento);
-                System.out.println(horaBase+"    Hora del intento");
-            }
+                horaIntento = rs.getTimestamp("hora");
+                System.out.println("Hora del intento fallido: "+horaIntento);
+                String horaFallida = horaIntento.toString();
+                int tiempoTranscurrido = horaActual2.compareTo(horaFallida);    //horaHoy - horaIntento 
+                if(tiempoTranscurrido>0)
+                {
+                    System.out.println("Ya pasó 1 hora o más.");
+                }else
+                {
+                    System.out.println("No ha pasado 1 hora aun.");
+                    resp = false;
+                }
+            }  
         }catch(SQLException ex)
         {
             Desconectar();
@@ -450,11 +487,12 @@ public class Consulta1 extends Conexion
         return resp;
     }
     
-
-
+    
+    
     public static void main (String[] args) throws SQLException, ParseException
     {   
         Consulta1 test = new Consulta1("root","root");
+        test.YaPasoElTiempo("joelrg1288@gmail.com");
         //test.Tiempo("abel.mejia.hdz@gmail.com");
     }
 }

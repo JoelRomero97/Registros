@@ -10,6 +10,7 @@ import Negocio.Consulta1;
 import java.io.*;
 import java.security.*;
 import java.sql.*;
+import java.text.ParseException;
 import java.util.logging.*;
 import java.util.regex.*;
 import javax.servlet.*;
@@ -32,6 +33,8 @@ public class Servlet extends HttpServlet
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException 
     {
+        
+        String msgBlock = "El usuario está bloqueado.";
         PrintWriter out = res.getWriter();
         res.setContentType("text/html;charset=utf-8");
         req.setCharacterEncoding("utf-8");
@@ -67,9 +70,10 @@ public class Servlet extends HttpServlet
                     {
                         case 4:
                             out.println("Inicio de Sesión Correcto.");
+                            req.getRequestDispatcher("index.html").forward(req, res);
                             break;
                         case 3:
-                            out.println("El usuario está bloqueado.");
+                           out.println(msgBlock);
                             break;
                         case 2:
                             out.println("La contraseña es incorrecta.");
@@ -84,6 +88,9 @@ public class Servlet extends HttpServlet
                 }catch(SQLException ex)
                 {
                     out.println("Error al intentar iniciar sesión: "+ex.getMessage());
+                } catch (ParseException ex) 
+                {
+                    Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }else
             {   
